@@ -4,7 +4,7 @@ require "aws-sdk-s3"
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
-  Uiza.authorization = "uap-9ee4c164e3944ad781ddcafbfad91a0d-1ac7c3ff"
+  Uiza.authorization = "your_key"
   appId =""
   upload_link = "upload_temp/"
 
