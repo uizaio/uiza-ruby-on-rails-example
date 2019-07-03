@@ -59,6 +59,9 @@ group :test do
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+# if you can not run this project on mac, please run this command ` source ~/.rvm/scripts/rvm`
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'uiza'
 gem 'aws-sdk-s3'
+gem 'bindex'
+gem "json"

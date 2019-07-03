@@ -1,12 +1,11 @@
 require "uiza"
 require "aws-sdk-s3"
+require "json"
 
 class ApplicationController < ActionController::Base
-  protect_from_forgery with: :exception
+  protect_from_forgery with: :null_session
 
   Uiza.authorization = "your_key"
-  appId =""
-  upload_link = "upload_temp/"
 
   def hello
     entities = Uiza::Entity.list
@@ -16,17 +15,23 @@ class ApplicationController < ActionController::Base
   end
 
   def uploadToAws
-    raw_params = request.post
-    params = JSON.parse(raw_params)
-
+    appId ="9ee4c164e3944ad781ddcafbfad91a0d"
+    uploadLink = "upload_temp/"
+    params = request.POST
+    # params = JSON.parse raw_params
     response = Uiza::Entity.get_aws_upload_key
+    puts response
     s3 = Aws::S3::Resource.new(
       :access_key_id => response.temp_access_id,
       :secret_access_key => response.temp_access_secret,
       :region => response.region_name,
       :session_token => response.temp_session_token
     )
-    obj = s3.bucket(response.bucket_name).object("upload-temp/" + appId + "/s3+uiza+" + params.entityId + ".mp4")
-    obj.upload_file(uploadlink + params.filename)
+    path = response.bucket_name
+    paths = path.split("/")
+    obj = s3.bucket(paths[0]).object(paths[1] + "/" + appId + "/s3+uiza+" + params["entityId"] + ".mp4")
+    obj.upload_file(uploadLink + params["filename"])
+    msg = {:res => "ok"}
+    render :json => msg
   end
 end
