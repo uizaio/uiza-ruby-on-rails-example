@@ -5,7 +5,7 @@ require "json"
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
 
-  Uiza.authorization = "your_key"
+  Uiza.authorization = "key"
 
   def hello
     entities = Uiza::Entity.list
@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
   end
 
   def uploadToAws
-    appId ="9ee4c164e3944ad781ddcafbfad91a0d"
+    appId = "9ee4c164e3944ad781ddcafbfad91a0d"
     uploadLink = "upload_temp/"
     params = request.POST
     # params = JSON.parse raw_params
@@ -33,5 +33,12 @@ class ApplicationController < ActionController::Base
     obj.upload_file(uploadLink + params["filename"])
     msg = {:res => "ok"}
     render :json => msg
+  end
+
+  def stopLive
+    response = Uiza::Live.stop_feed "955b35b1-e20f-4e46-8dd6-e1c0f5aed0b8"
+    puts response.message
+    render :json => response
+
   end
 end
